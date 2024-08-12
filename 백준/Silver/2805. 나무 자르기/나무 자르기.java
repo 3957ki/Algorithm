@@ -13,25 +13,23 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         long M = Integer.parseInt(st.nextToken());
         Integer[] arr = new Integer[N];
+        
+        int low = 0;
+        int high = 0;
+        int mid = 0;
         st = new StringTokenizer(br.readLine());
         for(int i = 0; i < N; i++) {
         	arr[i] = Integer.parseInt(st.nextToken());
+        	high = Math.max(high, arr[i]);
         }
-        Arrays.sort(arr, Collections.reverseOrder());
-        
-        int low = 0;
-        int high = arr[0];
-        int mid = 0;
         long sum = 0;
         while(low <= high) {
         	mid = (low+high)/2;
         	sum = 0;
         	for(Integer num : arr) {
-        		if(num-mid > 0) {
+        		if(num > mid) {
         			sum += num-mid;
-        			continue;
         		}
-        		break;
         	}
         	if(sum < M) {
         		high = mid - 1;
@@ -41,9 +39,6 @@ public class Main {
         	}
         	
         }
-        if(sum < M) {
-        	mid--;
-        }
-        System.out.println(mid);
+        System.out.println(high);
     }
 }
