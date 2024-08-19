@@ -1,6 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
 import java.util.StringTokenizer;
 
 //성능 요약
@@ -11,7 +10,7 @@ import java.util.StringTokenizer;
 //False면 B요리 시너지 구하기
 
 public class Solution {
-	static int N;
+	static int N, select;
 	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -23,62 +22,57 @@ public class Solution {
 			int answer = Integer.MAX_VALUE;
 			N = Integer.parseInt(br.readLine());
 			int[][] arr = new int[N][N];
-			int[] select = new int[N];
-			
+			select = (1<<(N/2))-1;
 			for(int i = 0; i < N; i++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
 				for(int j = 0; j < N; j++) {
 					arr[i][j] = Integer.parseInt(st.nextToken());
 				}
 			}
-			for(int i = N-1; i >= N/2; i--) {
-				select[i] = 1;
-			}
+			
 			do {
 				long sumA = 0;
 				long sumB = 0;
 				for(int i = 0; i < N; i++) {
 					for(int j = 0; j < N; j++) {
-						if(select[i] == 1 && select[j] == 1) {
+						if(((select>>i)&1) == 1 && ((select>>j)&1) == 1) {
 							sumA += arr[i][j];
 						}
 						
-						else if(select[i] == 0 && select[j] == 0) {
+						else if(((select>>i)&1) == 0 && ((select>>j)&1) == 0) {
 							sumB += arr[i][j];
 						}
-						
 					}
 				}
 				answer = Math.min((int)Math.abs(sumA-sumB), answer);
-			}while(np(select));
+			}while(np());
 			
 			sb.append('#').append(t).append(' ').append(answer).append('\n');
 		}
 		System.out.println(sb);
 	}
 	
-	static boolean np(int[] select) {
-		int i = N-1;
-		while(i > 0 && select[i-1] >= select[i]) i--;
+	static boolean np() {
+		int i = 0;
+		while(i < N-1 && ((select>>(i+1))&1) >= ((select>>i)&1)) i++;
 		
-		if(i == 0) return false;
+		if(i == N-1) return false;
 		
-		int j = N-1;
-		while(select[i-1] >= select[j]) j--;
+		int j = 0;
+		while(((select>>(i+1))&1) >= ((select>>j)&1)) j++;
 		
-		swap(select, i-1, j);
+		select^=1<<(i+1);
+		select^=1<<j;
 		
-		int k = N-1;
-		while(i < k) {
-			swap(select, i++, k--);
+		int k = 0;
+		while(i > k && (((select>>i)&1)) != ((select>>k)&1)) {
+			select^=1<<i;
+			select^=1<<k;
+			i--;
+			k++;
 		}
-		if(select[0] == 1) return false;
+		if(select>>(N-1) == 1) return false;
 		return true;
 	}
 	
-	static void swap(int[] select, int i, int j) {
-		int temp = select[i];
-		select[i] = select[j];
-		select[j] = temp;
-	}
 }
