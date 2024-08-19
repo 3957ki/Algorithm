@@ -58,7 +58,6 @@ public class Solution {
 	}
 	
 	static boolean np(int[] select) {
-		
 		int i = N-1;
 		while(i > 0 && select[i-1] >= select[i]) i--;
 		
@@ -73,7 +72,7 @@ public class Solution {
 		while(i < k) {
 			swap(select, i++, k--);
 		}
-		
+		if(select[0] == 1) return false;
 		return true;
 	}
 	
