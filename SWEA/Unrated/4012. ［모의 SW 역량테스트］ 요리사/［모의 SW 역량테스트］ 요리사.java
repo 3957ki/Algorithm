@@ -1,11 +1,17 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
+//성능 요약
+//메모리: 21,636 KB, 시간: 253 ms, 코드길이: 1,469 Bytes
+
+//조합으로 N/2개 뽑아서 분리
+//True면 A요리 시너지 구하기
+//False면 B요리 시너지 구하기
+
 public class Solution {
-	static int answer, N;
-	static int[] A, B;
-	static int[][] arr;
+	static int N;
 	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -14,12 +20,10 @@ public class Solution {
 		int T = Integer.parseInt(br.readLine());
 		
 		for(int t = 1; t <= T; t++) {
-			answer = Integer.MAX_VALUE;
+			int answer = Integer.MAX_VALUE;
 			N = Integer.parseInt(br.readLine());
-			A = new int[N];
-			B = new int[N];
-			arr = new int[N][N];
-			boolean[] visited = new boolean[N];
+			int[][] arr = new int[N][N];
+			int[] select = new int[N];
 			
 			for(int i = 0; i < N; i++) {
 				StringTokenizer st = new StringTokenizer(br.readLine());
@@ -27,36 +31,55 @@ public class Solution {
 					arr[i][j] = Integer.parseInt(st.nextToken());
 				}
 			}
+			for(int i = N-1; i >= N/2; i--) {
+				select[i] = 1;
+			}
+			do {
+				long sumA = 0;
+				long sumB = 0;
+				for(int i = 0; i < N; i++) {
+					for(int j = 0; j < N; j++) {
+						if(select[i] == 1 && select[j] == 1) {
+							sumA += arr[i][j];
+						}
+						
+						else if(select[i] == 0 && select[j] == 0) {
+							sumB += arr[i][j];
+						}
+						
+					}
+				}
+				answer = Math.min((int)Math.abs(sumA-sumB), answer);
+			}while(np(select));
 			
-			comb(0, 0, visited);
 			sb.append('#').append(t).append(' ').append(answer).append('\n');
 		}
 		System.out.println(sb);
 	}
 	
-	static void comb(int cnt, int start, boolean[] visited) {
-		if(cnt == N/2) {
-			long sumA = 0;
-			long sumB = 0;
-			for(int i = 0; i < N; i++) {
-				for(int j = 0; j < N; j++) {
-					if(visited[i] && visited[j]) {
-						sumA+=arr[i][j];
-					}
-					else if(!visited[j] && !visited[i]) {
-						sumB+=arr[i][j];
-					}
-				}
-			}
-			answer = Math.min((int)Math.abs(sumA-sumB), answer);
-			return;
+	static boolean np(int[] select) {
+		
+		int i = N-1;
+		while(i > 0 && select[i-1] >= select[i]) i--;
+		
+		if(i == 0) return false;
+		
+		int j = N-1;
+		while(select[i-1] >= select[j]) j--;
+		
+		swap(select, i-1, j);
+		
+		int k = N-1;
+		while(i < k) {
+			swap(select, i++, k--);
 		}
 		
-		for(int i = start; i < N; i++) {
-			visited[i] = true;
-			comb(cnt+1, i+1, visited);
-			visited[i] = false;
-		}
-		
+		return true;
+	}
+	
+	static void swap(int[] select, int i, int j) {
+		int temp = select[i];
+		select[i] = select[j];
+		select[j] = temp;
 	}
 }
