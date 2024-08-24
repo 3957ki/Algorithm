@@ -16,7 +16,6 @@ public class Main {
 		for(int i = 0; i <= N; i++) {
 			arr[i] = new ArrayList<>();
 		}
-		boolean[] visited = new boolean[N+1];
 		
 		for(int i = 1; i < N; i++) {
 			StringTokenizer st = new StringTokenizer(br.readLine());
@@ -31,9 +30,9 @@ public class Main {
 		queue.addLast(1);
 		while(!queue.isEmpty()) {
 			Integer prt = queue.removeFirst();
-			for(Integer num : arr[prt]) {
-				if(visited[num]) continue;
-				visited[num] = true;
+			while(!arr[prt].isEmpty()) {
+				Integer num = arr[prt].remove(0);
+				arr[num].remove(prt);
 				parent[num] = prt;
 				queue.addLast(num);
 			}
