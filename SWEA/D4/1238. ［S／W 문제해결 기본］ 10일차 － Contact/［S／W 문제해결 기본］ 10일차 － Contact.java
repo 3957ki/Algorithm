@@ -15,12 +15,13 @@ public class Solution {
 			int N = Integer.parseInt(st.nextToken())/2;
 			int M = Integer.parseInt(st.nextToken());
 			
-			boolean[][] edge = new boolean[101][101];
+			Node[] edge = new Node[101];
+			
 			st = new StringTokenizer(br.readLine());
 			for(int i = 0; i < N; i++) {
 				int start = Integer.parseInt(st.nextToken());
 				int end = Integer.parseInt(st.nextToken());
-				edge[start][end] = true;
+				edge[start] = new Node(end, edge[start]);
 			}
 			
 			Queue<Integer> queue = new ArrayDeque<>();
@@ -35,12 +36,10 @@ public class Solution {
 				for(int i = 0; i < L; i++) {
 					int num = queue.poll();
 					answer = Math.max(answer, num);
-					for(int j = 1; j <= 100; j++) {
-						if(edge[num][j]) {
-							if(visited[j]) continue;
-							visited[j] = true;
-							queue.add(j);
-						}
+					for(Node temp = edge[num]; temp != null; temp = temp.next) {
+						if(visited[temp.to]) continue;
+						visited[temp.to] = true;
+						queue.add(temp.to);
 					}
 				}
 			}
@@ -50,4 +49,13 @@ public class Solution {
 		System.out.println(sb);
 	}
 
+	static class Node{
+		int to;
+		Node next;
+		public Node(int to, Node next) {
+			this.to = to;
+			this.next = next;
+		}
+		
+	}
 }
