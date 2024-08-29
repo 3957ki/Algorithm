@@ -1,72 +1,64 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N;
-	static int[] parents;
-	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
+		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		Edge[] edges = new Edge[M];
+		boolean[] visited = new boolean[N+1];
+		List<Edge>[] edge = new ArrayList[N+1];
+		for(int i = 1; i <= N; i++) {
+			edge[i] = new ArrayList<>();
+		}
 		for(int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
-			edges[i] = new Edge(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-		}
-		
-		Arrays.sort(edges, (o1, o2) -> o1.weight - o2.weight);
-		parents = new int[N+1];
-		make();
-		
-		int cnt = 0;
-		int cost = 0;
-		for(Edge edge : edges) {
-			if(union(edge.start, edge.end)) {
-				if(++cnt == N-1) break;
-				cost += edge.weight;
-			}
+			int start = Integer.parseInt(st.nextToken());
+			int end = Integer.parseInt(st.nextToken());
+			int weight = Integer.parseInt(st.nextToken());
 			
+			edge[start].add(new Edge(end, weight));
+			edge[end].add(new Edge(start, weight));
 		}
-		System.out.println(cost);
-	}
-	
-	static void make() {
-		for(int i = 1; i <= N; i++) {
-			parents[i] = -1;
-		}
-	}
-	
-	static int findSet(int a) {
-		if(parents[a] < 0) return a;
-		return parents[a] = findSet(parents[a]);
-	}
-	
-	static boolean union(int a, int b) {
-		int aRoot = findSet(a);
-		int bRoot = findSet(b);
 		
-		if(aRoot == bRoot) return false;
-//		집합의 크기 관리
-		parents[aRoot] += parents[bRoot];
-		parents[bRoot] = aRoot;
-		return true;
+		PriorityQueue<Edge> queue = new PriorityQueue<>((o1, o2) -> {
+			return o1.weight - o2.weight;
+		});
+		queue.add(new Edge(1, 0));
+		
+		int sum = 0;
+		int max = 0;
+		while(!queue.isEmpty()) {
+			Edge e = queue.poll();
+			if(visited[e.start]) continue;
+			visited[e.start] = true;
+			sum += e.weight;
+			max = Math.max(max, e.weight);
+			
+			for(Edge ed : edge[e.start]) {
+				if(!visited[ed.start]) {
+					queue.add(ed);
+				}
+			}
+		}
+		sum -= max;
+		System.out.println(sum);
 	}
-	
-	static class Edge{
-		int start, end, weight;
 
-		public Edge(int start, int end, int weight) {
+	static class Edge{
+		int start, weight;
+
+		public Edge(int start, int weight) {
 			this.start = start;
-			this.end = end;
 			this.weight = weight;
 		}
 		
 	}
-	
 }
