@@ -35,46 +35,44 @@ public class Main {
 				}
 			}
 		}
-//		치킨집 개수
+//		치킨집 개수, 폐업여부 temp
 		L = chicken.size();
 //		조합
-		comb(0, 0);
+		comb(0, 0, 0);
 		System.out.println(answer);
 	}
 
-	static void comb(int cnt, int c) {
+	static void comb(int cnt, int c, int temp) {
 //		치킨집 개수가 M개 넘으면 return
 		if(c > M) return;
 		if(cnt == L) {
 //			치킨집 개수가 0개여도 return
 			if(c == 0) return;
 //			치킨거리구하기
-			BFS();
+			BFS(temp);
 			return;
 		}
-//		폐업x
-		comb(cnt+1, c+1);
-		map[chicken.get(cnt).y][chicken.get(cnt).x] = 0;
 //		폐업o
-		comb(cnt+1, c);
-		map[chicken.get(cnt).y][chicken.get(cnt).x] = 2;
+		comb(cnt+1, c, temp);
+//		폐업x
+		comb(cnt+1, c+1, temp|1<<cnt);
 	}
 
-	static void BFS() {
+	static void BFS(int temp) {
 		int sum = 0;
 //		집마다 치킨거리 구해서 누적
 		for(Node h : house) {
 			int dst = Integer.MAX_VALUE;
 			int y = h.y;
 			int x = h.x;
-			for(int i = 0; i < N; i++) {
-				for(int j = 0; j < N; j++) {
-					if(map[i][j] == 2) {
-						dst = Math.min(dst, Math.abs(y-i) + Math.abs(x-j));
-					}
-				}
+			for(int i = 0; i < L; i++) {
+//				폐업한 치킨집이면 continue
+				if((temp&1<<i) == 0) continue;
+				dst = Math.min(dst, Math.abs(y-chicken.get(i).y) + Math.abs(x-chicken.get(i).x));
 			}
+//			이미 최소값을 넘어서면 return
 			sum+=dst;
+			if(answer < sum) return;
 		}
 //		최소값 갱신
 		answer = Math.min(answer, sum);
