@@ -97,7 +97,8 @@ public class Solution {
 		int size0 = stair0.size();
 		int size1 = stair1.size();
 		int visited = 0;
-//		내림차순으로 정렬하기
+        
+//		오름차순으로 정렬하기
 		Collections.sort(stair0);
 		Collections.sort(stair1);
 		
