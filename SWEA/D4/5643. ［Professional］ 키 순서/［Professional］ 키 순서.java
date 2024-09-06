@@ -1,7 +1,5 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayDeque;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class Solution {
@@ -26,60 +24,54 @@ public class Solution {
 				
 				edges[a][b] = 1;
 			}
-			int cnt = 0;
+			
 			for(int i = 1; i <= N; i++) {
-				if(bigBFS(i) + smallBFS(i) == N-1) {
-					cnt++;
+				edges[i][0] = -1;
+			}
+			
+			for(int i = 1; i <= N; i++) {
+				if(edges[i][0] != -1) continue;
+				bigDFS(i);
+			}
+			
+			for(int i = 1; i <= N; i++) {
+				for(int j = 1; j <= N; j++) {
+					edges[0][j] += edges[i][j];
 				}
 			}
 			
+			int answer = 0;
 			
-			sb.append('#').append(t).append(' ').append(cnt).append('\n');
+			for(int i = 1; i <= N; i++) {
+				if(edges[i][0]+edges[0][i] == N-1) answer++;
+			}
+			
+			sb.append('#').append(t).append(' ').append(answer).append('\n');
 		}
 		System.out.println(sb);
 	}
 	
-	static int bigBFS(int start) {
-		int cnt = 0;
+	static void bigDFS(int cur) {
 		
-		Queue<Integer> queue = new ArrayDeque<>();	
-		boolean[] visited = new boolean[N+1];
-		visited[start] = true;
-		queue.add(start);
-		
-		while(!queue.isEmpty()) {
-			int cur = queue.poll();
-			for(int i = 1; i <= N; i++) {
-				if(!visited[i] && edges[cur][i] != 0) {
-					queue.add(i);
-					visited[i] = true;
-					cnt++;
+		for(int i = 1; i <= N; i++) {
+			if(edges[cur][i] == 0) continue;
+			if(edges[i][0] == -1) {
+				bigDFS(i);
+			}
+			
+			if(edges[i][0] > 0) {
+				for(int j = 1; j <= N; j++) {
+					if(edges[i][j] != 0) {
+						edges[cur][j] = 1;
+					}
 				}
 			}
+			
 		}
 		
-		return cnt;
-	}
-	static int smallBFS(int start) {
-		int cnt = 0;
-		
-		Queue<Integer> queue = new ArrayDeque<>();	
-		boolean[] visited = new boolean[N+1];
-		visited[start] = true;
-		queue.add(start);
-		
-		while(!queue.isEmpty()) {
-			int cur = queue.poll();
-			for(int i = 1; i <= N; i++) {
-				if(!visited[i] && edges[i][cur] != 0) {
-					queue.add(i);
-					visited[i] = true;
-					cnt++;
-				}
-			}
+		edges[cur][0] = 0;
+		for(int i = 1; i <=N; i++) {
+			edges[cur][0] += edges[cur][i];
 		}
-		
-		return cnt;
 	}
-
 }
