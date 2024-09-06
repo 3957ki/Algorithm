@@ -3,11 +3,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.StringTokenizer;
-import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class Solution {
 	
-	static TreeMap<Integer, String> map;
+	static TreeSet<Integer> set;
 	static Queue<Character> queue;
 	static int N, L;
 	
@@ -25,10 +25,8 @@ public class Solution {
 			L = N/4;
 			
 			queue = new ArrayDeque<>();
-//			오름차순 정렬
-			map = new TreeMap<>((o1, o2) -> {
-				return o2 - o1;
-			});
+//			내림차순 정렬
+			set = new TreeSet<>((o1, o2) -> o2 - o1);
 			
 //			큐에 숫자들 넣기
 			String str = br.readLine();
@@ -36,10 +34,12 @@ public class Solution {
 				queue.add(str.charAt(i));
 			}
 			
+//			탐색
 			func();
-			int answer = 0;
 			
-			for(Integer num : map.keySet()) {
+//			K번째 값
+			int answer = 0;
+			for(Integer num : set) {
 				if(--K == 0) {
 					answer = num;
 				}
@@ -65,10 +65,8 @@ public class Solution {
 				}
 //				10진수로 변환
 				Integer value = Integer.decode(num);
-//				중복하지 않으면
-				if(!map.containsKey(value)) {
-					map.put(value, num);
-				}
+//				set에 넣기
+				set.add(value);
 			}
 			
 //			1칸 밀기
