@@ -1,7 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -32,28 +31,15 @@ public class Main {
         // 가중치 내림차순
         Collections.sort(edges, (o1, o2) -> o2.weight - o1.weight);
 
-        int left = 1;
-        int right = 1000000000;
-        int answer = 0;
-
         makeSet(N);
-        // 이진 탐색을 통해 최대 가중치 탐색
-        while (left <= right) {
-            int mid = (left + right) / 2;
-
-            // Union-Find 초기화
-            Arrays.fill(parents, -1);
-
-            // 현재 중량 이상으로 연결 가능한지 확인
-            if (canConnect(start, end, edges, mid)) {
-                answer = mid;
-                left = mid + 1;  // 더 큰 가중치를 시도
-            } else {
-                right = mid - 1; // 더 작은 가중치를 시도
+        for (Edge edge : edges) {
+            union(edge.start, edge.end);
+            if (findSet(start) == findSet(end)) {
+            	System.out.println(edge.weight);
+            	return;
             }
         }
 
-        System.out.println(answer);
     }
 
     static void makeSet(int N) {
@@ -75,20 +61,6 @@ public class Main {
         parents[rootA] += parents[rootB];
         parents[rootB] = rootA;
         return true;
-    }
-
-    static boolean canConnect(int start, int end, List<Edge> edges, int weightLimit) {
-        for (Edge edge : edges) {
-            // 현재 중량 이상인 간선만 고려
-            if (edge.weight >= weightLimit) {
-                union(edge.start, edge.end);
-                // 두 공장이 연결되었는지 확인
-                if (findSet(start) == findSet(end)) {
-                    return true;
-                }
-            }
-        }
-        return false;
     }
 
     static class Edge {
