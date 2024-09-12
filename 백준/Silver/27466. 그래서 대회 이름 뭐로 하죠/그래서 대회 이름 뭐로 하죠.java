@@ -15,45 +15,26 @@ public class Main {
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
 		
-		String str = br.readLine();
+		char[] arr = br.readLine().toCharArray();
 		
-		PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
-		
-		for(int i = 0; i < N; i++) {
-			char c = str.charAt(i);
-			if(c == 'A') pq.add(i);
+		for(int i = N-1; i >= 0; i--) {
+			if(sb.length() == 0 && arr[i] != 'A' && arr[i] != 'E' && arr[i] != 'I' && arr[i] != 'O' && arr[i] != 'U'){
+				sb.append(arr[i]);
+			}
+			else if(sb.length() < 3 && sb.length() > 0 && arr[i] == 'A'){
+				sb.append(arr[i]);
+			}
+			else if(sb.length() >= 3 && sb.length() < M){
+				sb.append(arr[i]);
+			}
 		}
 		
-		if(pq.size() < 2) {
-			System.out.println("NO");
-			return;
-		}
-		
-		char end = '0';
-		
-		for(int i = pq.poll()+1; i < N; i++) {
-			char now = str.charAt(i);
-			if(now == 'E' || now == 'I' || now == 'O' || now == 'U') continue;
-			end = now;
-			break;
-		}
-		
-		if(end == '0') {
-			System.out.println("NO");
-			return;
-		}
-		
-		int pos = pq.poll();
-		if(pos+3 < M) {
-			System.out.println("NO");
-			return;
-		}
-		sb.append("YES").append('\n');
-		for(int i = 0; i < M-3; i++) {
-			sb.append(str.charAt(i));
-		}
-		sb.append("AA").append(end);
-		System.out.println(sb);
+        if(sb.length() == M){
+            System.out.println("YES");
+            System.out.println(sb.reverse());
+        }else{
+            System.out.println("NO");
+        }
 	}
 
 }
