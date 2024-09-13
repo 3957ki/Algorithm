@@ -30,24 +30,40 @@ public class Main {
 		
 		Arrays.sort(arr);
 		
-		A: for(int i = 0; i < N-1; i++) {
-			for(int j = i+1; j < N; j++) {
+		int low;
+		int high;
+		int mid;
+		
+		for(int i = 0; i < N-1; i++) {
+			low = i+1;
+			high = N-1;
+			while(low <= high) {
+				mid = (low+high)/2;
 //				같으면 종료
-				if(arr[i]+arr[j] == C) {
+				if(arr[i]+arr[mid] == C) {
 					System.out.println(1);
 					return;
 				}
 //				합이 C보다 작으면
-				else if(arr[i]+arr[j] < C) {
-					int num = C - (arr[i]+arr[j]);
-					if(num != arr[i] && num != arr[j] && set.contains(num)) {
+				else if(arr[i]+arr[mid] < C) {
+					int num = C - (arr[i]+arr[mid]);
+					if(num != arr[i] && num != arr[mid] && set.contains(num)) {
 						System.out.println(1);
 						return;
 					}
+					if(num > arr[mid]) {
+						low = mid+1;
+					}
+					else {
+						high = mid-1;
+					}
 				}
 //				합이 C보다 크면
-				else continue A;
+				else {
+					high = mid-1;
+				};
 			}
+			
 		}
 		System.out.println(0);
 	}
