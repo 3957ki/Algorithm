@@ -6,19 +6,15 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N, M, K;
-	static int sum, temp, answer=Integer.MAX_VALUE;
-	static Drink[] arr;
-	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		M = Integer.parseInt(st.nextToken());
-		K = Integer.parseInt(st.nextToken());
+		int N = Integer.parseInt(st.nextToken());
+		int M = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken());
 		
-		arr = new Drink[K];
+		Drink[] arr = new Drink[K];
 		
 		for(int i = 0; i < K; i++) {
 			st = new StringTokenizer(br.readLine());
