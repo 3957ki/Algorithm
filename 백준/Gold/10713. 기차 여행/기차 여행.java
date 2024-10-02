@@ -49,10 +49,10 @@ public class Main {
 			C[i] = Integer.parseInt(st.nextToken());
 		}
 		
-		int answer = 0;
-		int prevCnt = 0;
+		long answer = 0;
+		long prevCnt = 0;
 		for(int i = min; i < max; i++) {
-			int cnt = prevCnt+arr[i];
+			long cnt = prevCnt+arr[i];
 			prevCnt = cnt;
 			answer += Math.min(A[i]*cnt, B[i]*cnt+C[i]);
 		}
