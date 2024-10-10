@@ -13,7 +13,7 @@ public class Main {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		int N = Integer.parseInt(br.readLine());
 		
-		List<Integer> inside = new ArrayList<>();
+		HashSet<Integer> inside = new HashSet<>();
 		HashSet<Integer> outside = new HashSet<>();
 		
 		String str = br.readLine();
@@ -42,31 +42,36 @@ public class Main {
 		Queue<Integer> queue = new ArrayDeque<>();
 		
 		int answer = 0;
-		int L = inside.size();
-		for(int i = 0; i < L-1; i++) {
-			for(int j = i+1; j < L; j++) {
-				int start = inside.get(i);
-				int end = inside.get(j);
-				boolean[] visited = new boolean[N+1];
-				queue.add(start);
-				visited[start] = true;
-				
-				A: while(!queue.isEmpty()) {
-					int now = queue.poll();
-					for(int next : edges[now]) {
-						if(next == end) {
-							answer++;
-							queue.clear();
-							break A;
-						}
-						if(!outside.contains(next) || visited[next]) continue;
-						visited[next] = true;
-						queue.add(next);
-					}
-				}
+//		실내 2지점 만날 때
+		for(int start : inside) {
+			for(int next : edges[start]) {
+				if(!inside.contains(next)) continue;
+				answer++;
 			}
 		}
-		System.out.println(answer*2);
+//		실외에서 BFS해서 만나는 실내 점들 개수로 계산
+		boolean[] visited = new boolean[N+1];
+		for(int start : outside) {
+			if(visited[start]) continue;
+			visited[start] = true;
+			queue.add(start);
+			int cnt = 0;
+			
+			while(!queue.isEmpty()) {
+				int now = queue.poll();
+				for(int next : edges[now]) {
+					if(visited[next]) continue;
+					if(inside.contains(next)) {
+						cnt++;
+						continue;
+					}
+					visited[next] = true;
+					queue.add(next);
+				}
+			}
+			answer+= cnt*(cnt-1);
+		}
+		System.out.println(answer);
 	}
 
 }
