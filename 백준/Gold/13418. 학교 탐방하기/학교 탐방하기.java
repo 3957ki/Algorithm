@@ -1,28 +1,32 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.PriorityQueue;
 import java.util.StringTokenizer;
 
 public class Main {
 
+	static int[] parents;
+	static int N;
+	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringTokenizer st;
 		st = new StringTokenizer(br.readLine());
-		int N = Integer.parseInt(st.nextToken());
+		N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
+		
+		parents = new int[N+1];
+		Arrays.fill(parents, -1);
 		
 		st = new StringTokenizer(br.readLine());
 		Integer.parseInt(st.nextToken());
 		Integer.parseInt(st.nextToken());
 		int w = Integer.parseInt(st.nextToken())^1;
 		
-		List<Edge>[] edges = new ArrayList[N+1];
-		for(int i = 1; i <= N; i++) {
-			edges[i] = new ArrayList<>();
-		}
+		List<Edge> edges = new ArrayList<>();
 		
 		for(int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
@@ -30,63 +34,65 @@ public class Main {
 			int end = Integer.parseInt(st.nextToken());
 			int weight = Integer.parseInt(st.nextToken())^1;
 			
-			edges[start].add(new Edge(end, weight));
-			edges[end].add(new Edge(start, weight));
+			edges.add(new Edge(end, start, weight));
+			edges.add(new Edge(start, end, weight));
 		}
 		
-		PriorityQueue<Edge> pq = new PriorityQueue<>((o1, o2) -> o1.w - o2.w);
-		boolean[] visited = new boolean[N+1];
-		pq.add(new Edge(1, w));
-		visited[0] = true;
+		Collections.sort(edges, (o1, o2) -> o1.w - o2.w);
 		
-		int dst = 0;
-		while(!pq.isEmpty()) {
-			Edge now = pq.poll();
-			
-			if(visited[now.v]) continue;
-			visited[now.v] = true;
-			
-			dst+=now.w;
-			
-			for(Edge next : edges[now.v]) {
-				if(visited[next.v]) continue;
-				pq.add(next);
+		int good = w;
+		int cnt = 0;
+		for(Edge edge : edges) {
+			if(union(edge.start, edge.end)) {
+				good+=edge.w;
+				if(++cnt == N-1) break;
 			}
 		}
 		
-		int good = dst*dst;
+		good *= good;
 		
-		pq = new PriorityQueue<>((o1, o2) -> o2.w - o1.w);
-		visited = new boolean[N+1];
-		pq.add(new Edge(1, w));
-		visited[0] = true;
+		Collections.sort(edges, (o1, o2) -> o2.w - o1.w);
 		
-		dst = 0;
-		while(!pq.isEmpty()) {
-			Edge now = pq.poll();
-			
-			if(visited[now.v]) continue;
-			visited[now.v] = true;
-			
-			dst+=now.w;
-			
-			for(Edge next : edges[now.v]) {
-				if(visited[next.v]) continue;
-				pq.add(next);
+		parents = new int[N+1];
+		Arrays.fill(parents, -1);
+		
+		int bad = w;
+		cnt = 0;
+		for(Edge edge : edges) {
+			if(union(edge.start, edge.end)) {
+				bad+=edge.w;
+				if(++cnt == N-1) break;
 			}
 		}
-		int bad = dst*dst;
+		
+		bad *= bad;
+		
 		System.out.println(bad-good);
+	}
+	
+	static int find(int a) {
+		if(parents[a] < 0) return a;
+		return parents[a] = find(parents[a]);
+	}
+	
+	static boolean union(int a, int b) {
+		int aRoot = find(a);
+		int bRoot = find(b);
+		if(aRoot == bRoot) return false;
+		parents[aRoot] += parents[bRoot];
+		parents[bRoot] = aRoot;
+		return true;
 	}
 
 	static class Edge{
-		int v, w;
+		int start, end , w;
 
-		public Edge(int v, int w) {
+		public Edge(int start, int end, int w) {
 			super();
-			this.v = v;
+			this.start = start;
+			this.end = end;
 			this.w = w;
 		}
-		
+
 	}
 }
