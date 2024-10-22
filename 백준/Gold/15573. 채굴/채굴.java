@@ -29,7 +29,6 @@ public class Main {
 			map[N+1][i] = -1;
 		}
 		
-		Queue<Node> queue = new ArrayDeque<>();
 		int[] dx = {0, 0, 1, -1};
 		int[] dy = {1, -1, 0, 0};
 		boolean[][] visited;
@@ -44,6 +43,7 @@ public class Main {
 			mid = (low+high)/2;
 			
 //			BFS
+			Queue<Node> queue = new ArrayDeque<>();
 			visited = new boolean[N+2][M+2];
 			visited[0][0] = true;
 			queue.add(new Node(0, 0));
@@ -64,7 +64,6 @@ public class Main {
 					
 //					광물 수가 K이상이면 갱신
 					if(++cnt >= K) {
-						queue.clear();
 						answer = Math.min(answer, mid);
 						high = mid - 1;
 						continue A;
