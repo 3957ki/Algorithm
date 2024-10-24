@@ -8,6 +8,8 @@ import java.util.StringTokenizer;
 
 public class Main {
 
+	static Queue<Integer> queue = new ArrayDeque<>();
+	
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
@@ -35,7 +37,6 @@ public class Main {
 				edges[start].add(end);
 				ahead[end]++;
 			}
-			Queue<Integer> queue = new ArrayDeque<>();
 			
 			for(int i = 1; i <= M; i++) {
 //				시작점 큐에 넣기
@@ -51,11 +52,9 @@ public class Main {
 //				end라면
 				if(now == M) {
 					sb.append(K).append(' ').append(num[now]).append('\n');
-					break;
 				}
 				
 				for(Integer next : edges[now]) {
-					if(ahead[next] == 0) continue;
 //					ahead 감소시키기
 					--ahead[next];
 					
