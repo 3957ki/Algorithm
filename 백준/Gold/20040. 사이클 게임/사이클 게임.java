@@ -1,54 +1,52 @@
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.StringTokenizer;
 
 public class Main {
 
-	static int N;
-	static int[] parents;
-	
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringBuilder sb = new StringBuilder();
-		StringTokenizer st = new StringTokenizer(br.readLine());
-		N = Integer.parseInt(st.nextToken());
-		int M = Integer.parseInt(st.nextToken());
-		
-		parents = new int[N];
-		make();
-		
-		int answer = 0;
-		for(int i = 1; i <= M; i++) {
-			st = new StringTokenizer(br.readLine());
-			int start = Integer.parseInt(st.nextToken());
-			int end = Integer.parseInt(st.nextToken());
-			if(!union(start, end)) {
-				answer = i;
-				break;
-			}
-		}
-		
-		System.out.println(answer);
-	}
-	
-	static void make() {
-		for(int i = 0; i < N; i++) {
-			parents[i] = i;
-		}
-	}
-	
-	static int findSet(int a) {
-		if(a == parents[a]) return a;
-		return parents[a] = findSet(parents[a]);
-	}
-	
-	static boolean union(int a, int b) {
-		int aRoot = findSet(a);
-		int bRoot = findSet(b);
-		
-		if(aRoot == bRoot) return false;
-		parents[bRoot] = aRoot;
-		return true;
-	}
-	
+    static int n, parents[];
+
+    static void make() {
+        parents = new int[n];
+        Arrays.fill(parents, -1);
+    }
+
+    static int findset(int a) {
+        if(parents[a] < 0) return a;
+        return parents[a] = findset(parents[a]);
+    }
+
+    static boolean union(int a, int b) {
+        int aRoot = findset(a);
+        int bRoot = findset(b);
+        if( aRoot == bRoot ) return false;
+
+        parents[aRoot] += parents[bRoot];
+        parents[bRoot] = aRoot;
+        return true;
+    }
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        StringTokenizer st = new StringTokenizer(br.readLine());
+
+        n = Integer.parseInt(st.nextToken());
+        int m = Integer.parseInt(st.nextToken());
+        make();
+
+        for(int i = 1; i <= m; i++) {
+            st = new StringTokenizer(br.readLine());
+
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+
+            if(!union(a, b)) {
+                System.out.println(i);
+                return;
+            }
+        }
+        System.out.println(0);
+    }
 }
