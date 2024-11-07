@@ -21,12 +21,7 @@ public class Main {
 		}
 		
 //		시작지점 오름차순
-		Collections.sort(list, (o1, o2) -> {
-			if(o1.start == o2.start) {
-				return o1.end-o2.end;
-			}
-			return o1.start-o2.start;
-		});
+		Collections.sort(list, (o1, o2) -> o1.start-o2.start);
 		
 		int min = Integer.MIN_VALUE;
 		int max = Integer.MIN_VALUE;
