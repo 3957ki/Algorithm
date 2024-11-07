@@ -20,15 +20,12 @@ public class Main {
 		
 		char[][] map = new char[N][M];
 		List<Node> human = new ArrayList<>();
-		Node boss;
 		
 		for(int i = 0; i < N; i++) {
 			String str = br.readLine();
 			for(int j = 0; j < M; j++) {
 				map[i][j] = str.charAt(j);
-				if(map[i][j] == 'X' || map[i][j] == '.') continue;
-//				보스 위치
-				if(map[i][j] == 'B') boss = new Node(i, j, 'B');
+				if(map[i][j] == 'X' || map[i][j] == '.' || map[i][j] == 'B') continue;
 //				사람 위치
 				else human.add(new Node(i, j, map[i][j]));
 			}
@@ -71,12 +68,15 @@ public class Main {
 						int x = now.x+dx[d];
 						if(y < 0 || y >= N || x < 0 || x >= M || visited[y][x] || map[y][x] == 'X') continue;
 						visited[y][x] = true;
+						
 //						보스를 만나면 종료
 						if(map[y][x] == 'B') {
+							
 //							같은 시간에 도착한 사람이 있다면
 							if(attack.containsKey(dst)) {
 								attack.put(dst, new Attack(attack.get(dst).cnt+1, attack.get(dst).dmg+damage[now.who]));
 							}
+							
 							else {
 								attack.put(dst, new Attack(1, damage[now.who]));
 							}
@@ -94,8 +94,10 @@ public class Main {
 		for(Integer dst : attack.keySet()) {
 //			공격
 			hp -= (dst-time)*dmg;
+			
 //			죽었다면 break
 			if(hp <= 0) break;
+			
 //			데미지와 인원수 증가
 			dmg += attack.get(dst).dmg;
 			answer += attack.get(dst).cnt;
