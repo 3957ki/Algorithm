@@ -1,9 +1,9 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.ArrayDeque;
+import java.util.HashSet;
+import java.util.Queue;
+import java.util.Set;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -21,14 +21,10 @@ public class Main {
 
 		st = new StringTokenizer(br.readLine());
 		for(int i = 1; i <= N; i++) {
-			arr[i] =Long.parseLong(st.nextToken());
+			arr[i] = Long.parseLong(st.nextToken());
 		}
 		arr[0] = -1;
 		arr[N+1] = L+1;
-
-		//		오름차순
-		Arrays.sort(arr);
-
 
 		if(K <= N) {
 			//		K개
@@ -38,34 +34,35 @@ public class Main {
 			System.out.println(sb);
 			return;
 		}
+		Queue<Integer> queue = new ArrayDeque<>();
+		Set<Long> set = new HashSet<>();
 //		N개
-		for(int i = 0; i < N; i++) {
+		for(int i = 1; i <= N; i++) {
 			sb.append(0).append('\n');
+			queue.add(i);
+			set.add(arr[i]);
 		}
 
 		K -= N;
 
 		int dst = 0;
-		A: while(true) {
+		A: while(!queue.isEmpty()) {
 			dst++;
-			int cnt = 0;
-			for(int i = 1; i <= N; i++) {
-				if((arr[i]-arr[i-1]) >= dst*2) {
-					cnt++;
-				}
-				if((arr[i+1]-arr[i]) > dst*2) {
-					cnt++;
-				}
-				if(i == N && (arr[i+1]-arr[i]) == dst*2) {
-					cnt++;
-				}
-				while(cnt-- > 0) {
+			int S = queue.size();
+			while(S-- > 0) {
+				int i = queue.poll();
+				if(arr[i]-dst >= 0 && !set.contains(arr[i]-dst)) {
+					set.add(arr[i]-dst);
+					queue.add(i);
 					sb.append(dst).append('\n');
-					if(--K == 0) {
-						break A;
-					}
-				}		
-				cnt = 0;
+					if(--K == 0) break A;
+				}
+				if(arr[i]+dst <= L && !set.contains(arr[i]+dst)) {
+					set.add(arr[i]+dst);
+					queue.add(i);
+					sb.append(dst).append('\n');
+					if(--K == 0) break A;
+				}
 			}
 		}
 		System.out.println(sb);
