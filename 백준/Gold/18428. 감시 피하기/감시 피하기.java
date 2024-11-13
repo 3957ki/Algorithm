@@ -7,7 +7,7 @@ import java.util.StringTokenizer;
 public class Main {
 
 	static int L, N;
-	static List<Node> empty, students, teachers;
+	static List<Node> empty, teachers;
 	static char[][] map;
 	
 	public static void main(String[] args) throws Exception {
@@ -18,7 +18,6 @@ public class Main {
 		map = new char[N+1][N+1];
 		
 		empty = new ArrayList<>();
-		students = new ArrayList<>();
 		teachers = new ArrayList<>();
 		
 		for(int i = 1; i <= N; i++) {
@@ -26,14 +25,11 @@ public class Main {
 			for(int j = 1; j <= N; j++) {
 				map[i][j] = st.nextToken().charAt(0);
 				
-//				학생
-				if(map[i][j] == 'S') students.add(new Node(i, j));				
-				
 //				선생
-				else if(map[i][j] == 'T') teachers.add(new Node(i, j));
+				if(map[i][j] == 'T') teachers.add(new Node(i, j));
 				
 //				빈 공간
-				else empty.add(new Node(i, j));
+				else if(map[i][j] == 'X') empty.add(new Node(i, j));
 			}
 		}
 		
