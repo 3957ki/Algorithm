@@ -21,7 +21,7 @@ public class Main {
 				arr[i] = br.readLine();
 			}
 			
-			Arrays.sort(arr);
+//			Arrays.sort(arr);
 			
 			for(String str : arr) {
 //				실패시
@@ -66,7 +66,7 @@ public class Main {
 			now.isEnd = true;
 			
 //			뒤에 더 이어지는 번호가 있다면
-//			if(!now.map.isEmpty()) return false;
+			if(!now.map.isEmpty()) return false;
 			
 			return true;
 		}
