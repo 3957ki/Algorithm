@@ -1,79 +1,45 @@
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.StringTokenizer;
+import java.io.*;
+import java.util.*;
 
 public class Main {
-
-	static long[] arr, seg, lazy;
-	
-	public static void main(String[] args) throws Exception {
-		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-		StringTokenizer st;
-		int N = Integer.parseInt(br.readLine());
-		
-		st = new StringTokenizer(br.readLine());
-		int dst = Integer.parseInt(st.nextToken());
-		long damage = Integer.parseInt(st.nextToken());
-		
-		int C = Integer.parseInt(br.readLine());
-		
-		arr = new long[N+1];
-		seg = new long[N*4];
-		lazy = new long[N*4];
-		
-		for(int i = 1; i <= N; i++) {
-			arr[i] = Integer.parseInt(br.readLine());
-		}
-		
-		for(int i = 1; i <= N; i++) {
-			if(arr[i] == 0) continue;
-			int cnt = i <= dst ? i : dst;
-			cnt -= find(1, N, 1, i);
-			
-//			지뢰
-			if(cnt <= 0 || arr[i] > damage*cnt) {
-				if(C-- == 0) {
-					System.out.println("NO");
-					return;					
-				}
-				update(1, N, 1, i, Math.min(i+dst, N));
-			}
-		}
-		
-		System.out.println("YES");
-		
-	}
-
-	static void propagate(int start, int end, int index) {
-		if(lazy[index] != 0) {
-			if(start == end) {
-				seg[index] += lazy[index];
-				lazy[index] = 0;
-				return;
-			}
-			lazy[index<<1] += lazy[index];
-			lazy[index<<1|1] += lazy[index];
-			lazy[index] = 0;
-		}
-	}
-	static void update(int start, int end, int index, int left, int right) {
-		propagate(start, end, index);
-		if(start > right || end < left) return;
-		if(start >= left && end <= right) {
-			lazy[index]++;
-			propagate(start, end, index);
-			return;
-		}
-		int mid = (start+end)/2;
-		update(start, mid, index<<1, left, right);
-		update(mid+1, end, index<<1|1, left, right);
-	}
-	
-	static long find(int start, int end, int index, int target) {
-		propagate(start, end, index);
-		if(end < target || start > target) return 0;
-		if(start == end && start == target) return seg[index];
-		int mid = (start+end)/2;
-		return find(start, mid, index<<1, target)+find(mid+1, end, index<<1|1, target);
-	}
+    public static void main(String[] args) throws IOException {
+        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        
+        int L = Integer.parseInt(br.readLine());
+        StringTokenizer st = new StringTokenizer(br.readLine());
+        int Ml = Integer.parseInt(st.nextToken());
+        int Mk = Integer.parseInt(st.nextToken());
+        int C = Integer.parseInt(br.readLine());
+        
+        // ArrayDeque 사용 (LinkedList보다 빠름)
+        Deque<Integer> noGunZone = new ArrayDeque<>();
+        
+        boolean possible = true;
+        int zombieHp;
+        
+        for (int i = 0; i < L && possible; i++) {
+            zombieHp = Integer.parseInt(br.readLine());
+            
+            // 기관총 사거리를 벗어난 지점 제거
+            while (!noGunZone.isEmpty() && noGunZone.peekFirst() <= i - Ml) {
+                noGunZone.pollFirst();
+            }
+            
+            // 현재 위치에서의 실제 데미지 계산
+            // noGunZone.size()는 기관총을 쏘지 않은 구간의 개수
+            int damage = Mk * (Math.min(i + 1, Ml) - noGunZone.size());
+            
+            if (zombieHp > damage) {
+                if (C > 0) {
+                    C--;
+                    noGunZone.offerLast(i);  // 수류탄 사용 위치 기록
+                } else {
+                    possible = false;
+                }
+            }
+        }
+        
+        System.out.println(possible ? "YES" : "NO");
+        br.close();
+    }
 }
