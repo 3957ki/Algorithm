@@ -4,12 +4,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class Main {
-    static String[] arr = new String[] {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"};
-    static int N;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
         K: for(int a = 1; a < 100000; a++) {
             int b = N - a;
