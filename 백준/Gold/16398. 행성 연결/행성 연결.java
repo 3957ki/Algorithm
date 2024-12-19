@@ -24,6 +24,7 @@ public class Main {
         boolean[] visited = new boolean[N];
 
         long answer = 0;
+        int cnt = 0;
         while(!pq.isEmpty()){
             Edge now = pq.poll();
 
@@ -31,6 +32,8 @@ public class Main {
             visited[now.v] = true;
 
             answer += now.w;
+            if(++cnt == N) break;
+            
             for(int next = 0; next < N; next++){
                 if(visited[next]) continue;
                 pq.add(new Edge(next, edges[now.v][next]));
