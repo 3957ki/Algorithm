@@ -14,16 +14,14 @@ public class Main {
             Map<Integer, Integer> map = new HashMap<>();
             int[] arr = new int[N];
 
+            int[] answer = new int[2];
+            int maxDiff = -1;
+
             for (int i = 0; i < N; i++) {
                 int block = Integer.parseInt(br.readLine());
                 arr[i] = block;
                 map.put(block, map.getOrDefault(block, 0) + 1);
-            }
 
-            int[] answer = new int[2];
-            int maxDiff = -1;
-
-            for (int block : arr) {
                 if(map.containsKey(X-block)) {
                     if(X - block == block && map.get(block) < 2) continue;
                     int diff = Math.abs(X-2*block);
