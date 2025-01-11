@@ -5,13 +5,10 @@ import java.util.StringTokenizer;
 
 public class Main {
 
-    static int N;
-    static int[] CD;
-
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         StringTokenizer st;
-        N = Integer.parseInt(br.readLine());
+        int N = Integer.parseInt(br.readLine());
 
         int[] A = new int[N];
         int[] B = new int[N];
@@ -26,76 +23,51 @@ public class Main {
             D[i] = Integer.parseInt(st.nextToken());
         }
 
-        CD = new int[N*N];
+        int[] AB = new int[N*N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                AB[i*N+j] = A[i] + B[j];
+            }
+        }
+
+        int[] CD = new int[N*N];
         for (int i = 0; i < N; i++) {
             for (int j = 0; j < N; j++) {
                 CD[i*N+j] = C[i] + D[j];
             }
         }
 
+        Arrays.sort(AB);
         Arrays.sort(CD);
 
         long answer = 0;
-        for (int i = 0; i < N; i++) {
-            for (int j = 0; j < N; j++) {
-                int value = -(A[i] + B[j]);
-                int low = lowerBound(value);
-                int high = upperBound(value, low);
+        int left = 0;
+        int right = N*N-1;
 
-                if(low != Integer.MAX_VALUE && high != Integer.MIN_VALUE) {
-                    answer += high - low + 1;
-                }
+        while (left < N*N && right >= 0){
+
+            int value1 = AB[left];
+            long value1Cnt = 0;
+
+            while(left < N*N && AB[left] == value1){
+                value1Cnt++;
+                left++;
             }
+
+            int value2 = -value1;
+            long value2Cnt = 0;
+
+            while(right >= 0 && CD[right] > value2) right--;
+
+            while(right >= 0 && CD[right] == value2){
+                value2Cnt++;
+                right--;
+            }
+
+            answer += value1Cnt * value2Cnt;
         }
 
         System.out.println(answer);
-    }
-
-    static int lowerBound(int value) {
-
-        int low = 0;
-        int high = N*N-1;
-        int mid;
-        int min = Integer.MAX_VALUE;
-
-        while(low <= high) {
-            mid = (low + high)/2;
-            if(CD[mid] > value) {
-                high = mid - 1;
-            }
-            else if(CD[mid] < value) {
-                low = mid + 1;
-            }
-            else {
-                min = Math.min(min, mid);
-                high = mid - 1;
-            }
-        }
-
-        return min;
-    }
-
-    static int upperBound(int value, int min) {
-        int low = min;
-        int high = N*N-1;
-        int mid;
-        int max = Integer.MIN_VALUE;
-
-        while(low <= high) {
-            mid = (low + high)/2;
-            if(CD[mid] > value) {
-                high = mid - 1;
-            }
-            else if(CD[mid] < value) {
-                low = mid + 1;
-            }
-            else {
-                max = Math.max(max, mid);
-                low = mid + 1;
-            }
-        }
-
-        return max;
     }
 
 }
