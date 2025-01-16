@@ -45,15 +45,17 @@ public class Main {
         // 자식 수
         int cnt = edges[now].size();
 
-        // 1이면 자식이 없음
-        if(cnt == 1 && now != 1) {
-            total += sum;
-            C++;
-            return;
+        
+        if(now != 1){
+            // 1이면 자식이 없음
+            if(cnt == 1) {
+                total += sum;
+                C++;
+                return;
+            }
+            cnt--;
         }
 
-        // 1이 아니면 자식수 -1
-        if(now != 1) cnt--;
         double w = sum/cnt;
 
         for (Integer next : edges[now]) {
