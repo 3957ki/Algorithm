@@ -48,19 +48,23 @@ public class Main {
 
     static int DFS(int i, int j) {
 
+        // 가능한 곳
         if(mark[i][j] == 1) {
             answer++;
             return 1;
         }
 
+        // 불가능한 곳
         if(mark[i][j] == 2) return 2;
 
+        // 이미 왔던 곳
         if(visited[i][j]) return 2;
         visited[i][j] = true;
 
         int y = i + dy[map[i][j]];
         int x = j + dx[map[i][j]];
 
+        // 다음에 탈출
         if(y < 0 || y >= N || x < 0 || x >= M) {
             answer++;
             mark[i][j] = 1;
