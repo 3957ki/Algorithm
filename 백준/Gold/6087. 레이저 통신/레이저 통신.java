@@ -55,6 +55,12 @@ public class Main {
 
 		while (!pq.isEmpty()) {
 			Node now = pq.poll();
+
+			if (now.y == end.y && now.x == end.x) {
+				System.out.println(visited[now.y][now.x][now.dir]);
+				break;
+			}
+
 			for (int d = 0; d < 4; d++) {
 				int y = now.y + dy[d];
 				int x = now.x + dx[d];
@@ -74,12 +80,6 @@ public class Main {
 				pq.add(new Node(y, x, d, nextCnt));
 			}
 		}
-
-		int answer = Integer.MAX_VALUE;
-		for (int i = 0; i < 4; i++) {
-			answer = Math.min(visited[end.y][end.x][i], answer);
-		}
-		System.out.println(answer);
 	}
 
 	static class Node {
