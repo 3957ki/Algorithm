@@ -12,6 +12,7 @@ public class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 
+		// 6가지 방향 미리 매핑 (-1, 0, 1) -> (0, 1, 2)로 변환후 숫자 2개 붙인 것
 		dir = new HashMap<>();
 		dir.put(21, new int[] {22, 20});
 		dir.put(22, new int[] {2, 21});
@@ -22,6 +23,7 @@ public class Main {
 
 		N = Integer.parseInt(br.readLine());
 
+		// 시작 지점과 한번 이동한 지점 방문 처리
 		visited[500][500] = true;
 		visited[501][501] = true;
 		DFS(500, 500, 0, 0);
@@ -31,14 +33,18 @@ public class Main {
 
 	public static void DFS(int y, int x, int now, int cnt) {
 
+		// N번 꺾어서 왔으면 return
 		if (cnt == N)
 			return;
 
 		int[] next = dir.get(now);
 
+		// 다음 방향
 		for (int d : next) {
 			int ny = y + (d / 10) - 1;
 			int nx = x + (d % 10) - 1;
+
+			// 방문한 곳인데 N-1번 꺾어서 왔다면 성공
 			if (visited[ny][nx] && cnt == N - 1) {
 				answer++;
 				continue;
