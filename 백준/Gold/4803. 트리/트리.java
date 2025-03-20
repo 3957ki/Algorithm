@@ -28,7 +28,7 @@ public class Main {
 			}
 
 			sb.append("Case ").append(T++).append(':');
-			
+
 			// 간선 리스트
 			List<int[]> edges = new ArrayList<>();
 
@@ -50,17 +50,24 @@ public class Main {
 
 			int cnt = 0;
 			for (int i = 1; i <= N; i++) {
+				// 루트이고 사이클이 아니면 ++
 				if (parents[i] < 0 && !set.contains(i))
 					cnt++;
 			}
 
-			if (cnt == 0) {
-				sb.append(" No trees.").append('\n');
-			} else if (cnt == 1) {
-				sb.append(" There is one tree.").append('\n');
-			} else {
-				sb.append(" A forest of ").append(cnt).append(" trees.").append('\n');
+			switch (cnt) {
+				case 0:
+					sb.append(" No trees.");
+					break;
+				case 1:
+					sb.append(" There is one tree.");
+					break;
+				default:
+					sb.append(" A forest of ").append(cnt).append(" trees.");
+					break;
 			}
+
+			sb.append('\n');
 		}
 
 		System.out.println(sb);
