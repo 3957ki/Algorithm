@@ -14,10 +14,10 @@ public class Main {
 		StringTokenizer st = new StringTokenizer(br.readLine());
 		int N = Integer.parseInt(st.nextToken());
 		int M = Integer.parseInt(st.nextToken());
-		int K = Integer.parseInt(st.nextToken());
+		int K = Integer.parseInt(st.nextToken()) - 1;
 
-		parents = new int[N + 1];
-		candies = new int[N + 1];
+		parents = new int[N + 1];    // 자식 사이즈 배열
+		candies = new int[N + 1];    // 사탕 개수 배열
 		Arrays.fill(parents, -1);
 
 		st = new StringTokenizer(br.readLine());
@@ -25,6 +25,7 @@ public class Main {
 			candies[i] = Integer.parseInt(st.nextToken());
 		}
 
+		// 연결
 		for (int i = 1; i <= M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int a = Integer.parseInt(st.nextToken());
@@ -32,6 +33,7 @@ public class Main {
 			union(a, b);
 		}
 
+		// 루트 객체 (인원수, 사탕수) 리스트
 		List<Node> list = new ArrayList<>();
 
 		for (int i = 1; i <= N; i++) {
@@ -40,14 +42,15 @@ public class Main {
 			}
 		}
 
-		int[] dp = new int[K];
+		int[] dp = new int[K + 1];
 
+		// 냅색
 		for (Node now : list) {
-			for (int i = K - 1; i >= now.member; i--) {
+			for (int i = K; i >= now.member; i--) {
 				dp[i] = Math.max(dp[i], dp[i - now.member] + now.candy);
 			}
 		}
-		System.out.println(dp[K - 1]);
+		System.out.println(dp[K]);
 	}
 
 	static class Node {
