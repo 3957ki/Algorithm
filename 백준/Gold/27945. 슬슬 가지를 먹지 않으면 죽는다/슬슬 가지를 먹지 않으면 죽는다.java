@@ -1,9 +1,6 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -19,30 +16,33 @@ public class Main {
 		parents = new int[N + 1];
 		Arrays.fill(parents, -1);
 
-		List<Node> edges = new ArrayList<>();
+		Node[] edges = new Node[N];
 
+		int cnt = N * (N - 1) / 2;
 		for (int i = 0; i < M; i++) {
 			st = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
 			int weight = Integer.parseInt(st.nextToken());
-			edges.add(new Node(start, end, weight));
+
+			// N일 부터는 볼 필요 없음
+			if (weight >= N)
+				continue;
+
+			edges[weight] = new Node(start, end);
+			cnt -= weight;
+			if (cnt == 0)
+				break;
 		}
 
-		Collections.sort(edges, (o1, o2) -> o1.w - o2.w);
-
-		int answer = 0;
-		int cnt = 0;
-		for (Node node : edges) {
-			if (union(node.start, node.end)) {
+		int answer = 1;
+		for (int i = 1; i < N; i++) {
+			if (edges[i] == null)
+				break;
+			if (union(edges[i].start, edges[i].end))
 				answer++;
-				if (node.w != answer)
-					break;
-				if (++cnt == N - 1) {
-					answer++;
-					break;
-				}
-			}
+			else
+				break;
 		}
 
 		System.out.println(answer);
@@ -65,12 +65,11 @@ public class Main {
 	}
 
 	static class Node {
-		int start, end, w;
+		int start, end;
 
-		public Node(int start, int end, int w) {
+		public Node(int start, int end) {
 			this.start = start;
 			this.end = end;
-			this.w = w;
 		}
 
 	}
