@@ -66,14 +66,14 @@ public class Main {
 		for (int i = 0; i < N; i++) {
 			if (dst[i].v == Y)
 				continue;
-			if (dst[i].w == Integer.MAX_VALUE || dst[i].w * 2 > X) {
+			if (dst[i].w == Integer.MAX_VALUE || (dst[i].w << 1) > X) {
 				answer = -1;
 				break;
 			}
-			if (cur + dst[i].w * 2 <= X) {
-				cur += dst[i].w * 2;
+			if (cur + (dst[i].w << 1) <= X) {
+				cur += (dst[i].w << 1);
 			} else {
-				cur = dst[i].w * 2;
+				cur = (dst[i].w << 1);
 				answer++;
 			}
 		}
