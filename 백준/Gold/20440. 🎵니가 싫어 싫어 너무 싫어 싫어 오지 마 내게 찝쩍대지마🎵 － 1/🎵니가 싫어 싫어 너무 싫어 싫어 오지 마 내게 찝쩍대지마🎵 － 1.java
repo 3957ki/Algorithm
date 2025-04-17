@@ -1,16 +1,15 @@
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
+import java.util.TreeMap;
 
 public class Main {
 	public static void main(String[] args) throws Exception {
 		BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
 		StringBuilder sb = new StringBuilder();
 
-		Map<Integer, Integer> map = new HashMap<>();
+		Map<Integer, Integer> map = new TreeMap<>((o1, o2) -> o1 - o2);
 
 		int N = Integer.parseInt(br.readLine());
 		for (int i = 0; i < N; i++) {
@@ -21,22 +20,19 @@ public class Main {
 			map.put(end, map.getOrDefault(end, 0) - 1);
 		}
 
-		Integer[] arr = map.keySet().toArray(new Integer[0]);
-		Arrays.sort(arr);
-
 		int max = 0;
 		int cur = 0;
 		int start = 0;
 		int end = 0;
 		boolean flag = false;
-		for (Integer now : arr) {
-			cur += map.get(now);
+		for (Map.Entry<Integer, Integer> now : map.entrySet()) {
+			cur += now.getValue();
 			if (cur > max) {
 				max = cur;
-				start = now;
+				start = now.getKey();
 				flag = true;
 			} else if (flag && cur < max) {
-				end = now;
+				end = now.getKey();
 				flag = false;
 			}
 		}
