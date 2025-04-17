@@ -21,12 +21,16 @@ public class Main {
 			StringTokenizer st = new StringTokenizer(br.readLine());
 			int start = Integer.parseInt(st.nextToken());
 			int end = Integer.parseInt(st.nextToken());
-			if (!map.containsKey(start))
+			if (!map.containsKey(start)) {
 				list.add(start);
-			if (!map.containsKey(end))
+				map.put(start, 1);
+			} else
+				map.put(start, map.get(start) + 1);
+			if (!map.containsKey(end)) {
 				list.add(end);
-			map.put(start, map.getOrDefault(start, 0) + 1);
-			map.put(end, map.getOrDefault(end, 0) - 1);
+				map.put(end, -1);
+			} else
+				map.put(end, map.get(end) - 1);
 		}
 
 		Collections.sort(list);
