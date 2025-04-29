@@ -19,10 +19,13 @@ public class Main {
 			dp[i] = new ArrayList<>();
 		}
 
+		// 첫번째 경우 add (번호1, 번호2, 이동 수)
 		dp[0].add(new Node(n1, n2, 0));
 
 		for (int i = 0; i < M; i++) {
 			int num = Integer.parseInt(br.readLine());
+
+			// 모든 경우 완탐
 			for (Node now : dp[i]) {
 				int diff1 = Math.abs(now.n1 - num);
 				int diff2 = Math.abs(now.n2 - num);
