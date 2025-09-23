@@ -34,6 +34,7 @@ public class Main {
 					value = Integer.parseInt(st.nextToken());
 					map.put(key, value);
 					break;
+					
 				case 2:
 					key = Integer.parseInt(st.nextToken());
 					value = Integer.parseInt(st.nextToken());
@@ -45,12 +46,13 @@ public class Main {
 
 					if(ceiling != null && floor != null) {
 						if(ceiling.equals(floor)) map.put(key, value);
-						if(ceiling - key > key - floor) map.put(floor, value);
-						if(key - floor > ceiling - key) map.put(ceiling, value);
+						else if(ceiling - key > key - floor) map.put(floor, value);
+						else if(key - floor > ceiling - key) map.put(ceiling, value);
 					}
 					else if (ceiling != null) map.put(ceiling, value);
 					else if (floor != null) map.put(floor, value);
 					break;
+					
 				default:
 					key = Integer.parseInt(st.nextToken());
 					ceiling = map.ceilingKey(key);
