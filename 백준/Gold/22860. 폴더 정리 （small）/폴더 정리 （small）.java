@@ -27,16 +27,17 @@ public class Main {
 			int type = Integer.parseInt(st.nextToken());
 
 			if(!map.containsKey(P)) map.put(P, new Node());
+			Node parent = map.get(P);
 
 			// 폴더
 			if(type == 1){
 				if(!map.containsKey(F)) map.put(F, new Node());
-				map.get(P).folders.put(F, map.get(F));
+				parent.folders.put(F, map.get(F));
 			}
 			// 파일
 			else{
-				map.get(P).files.add(F);
-				map.get(P).cnt++;
+				parent.files.add(F);
+				parent.cnt++;
 			}
 		}
 
