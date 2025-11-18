@@ -5,7 +5,7 @@ public class Main {
 
 	static int N;
 	static int[] arr;
-	static final int SUCCESS = (1 << 26) - 1;
+	// static final int SUCCESS = (1 << 26) - 1;
 
     public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -27,7 +27,7 @@ public class Main {
 
 	static int subset(int now, int status){
 		if(now == N){
-			if(status == SUCCESS) return 1;
+			if(Integer.bitCount(status) == 26) return 1;
 			return 0;
 		}
 		return subset(now + 1, status) + subset(now + 1, status | arr[now]);
